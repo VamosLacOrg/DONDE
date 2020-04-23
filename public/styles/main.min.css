@@ -1289,6 +1289,14 @@ td.services img {
   background-color: #e6642f;
 }
 
+.btn-hover {
+  background-color: #e6642f;
+}
+
+.btn-no-hover {
+  background-color: transparent;
+}
+
 nav {
   background-color: #e6642f;
   position: inherit;

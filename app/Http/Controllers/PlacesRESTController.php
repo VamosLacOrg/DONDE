@@ -27,238 +27,244 @@ class PlacesRESTController extends Controller
 
     public static function showAll($pais, $provincia, $partido, $ciudad, $service)
     {
-        $places = DB::table('places')
-          ->join('ciudad', 'places.idciudad', '=', 'ciudad.id')
-          ->join('partido', 'places.idPartido', '=', 'partido.id')
-          ->join('provincia', 'places.idProvincia', '=', 'provincia.id')
-          ->join('pais', 'places.idPais', '=', 'pais.id')
-          ->where($service, '=', 1)
-          ->where('nombre_ciudad', $ciudad)
-          ->where('nombre_pais', $pais)
-          ->where('nombre_provincia', $provincia)
-          ->where('nombre_partido', $partido)
-          ->where('places.aprobado', '=', 1)
-          ->select()
-          ->get();
+      $places = DB::table('places')
+      ->join('ciudad', 'places.idciudad', '=', 'ciudad.id')
+      ->join('partido', 'places.idPartido', '=', 'partido.id')
+      ->join('provincia', 'places.idProvincia', '=', 'provincia.id')
+      ->join('pais', 'places.idPais', '=', 'pais.id')
+      ->where($service, '=', 1)
+      ->where('nombre_ciudad', $ciudad)
+      ->where('nombre_pais', $pais)
+      ->where('nombre_provincia', $provincia)
+      ->where('nombre_partido', $partido)
+      ->where('places.aprobado', '=', 1)
+      ->select()
+      ->get();
       // dd($service);
 
       $resu = array();
 
-        if ($service == "condones") {
-            $resu['title'] = 'Condones';
-            $resu['icon'] = 'iconos-new_preservativos-3.png';
-            $resu['titleCopySeo'] = 'consigo Condones';
-            $resu['descriptionCopy'] = 'los lugares para retirar condones gratis';
+      $str = "friendly_";
+      $i = strpos($service,$str);
+      if ($i !== false){
+        $service = substr($service,$i + strlen($str));
+      }
 
-            $resu['titleCopySingle'] = 'lugar que distribuye Condones de forma gratuita.';
-            $resu['titleCopyMultiple'] = 'lugares que distribuyen Condones de forma gratuita.';
+      if ($service == "condones") {
+        $resu['title'] = 'Condones';
+        $resu['icon'] = 'iconos-new_preservativos-3.png';
+        $resu['titleCopySeo'] = 'consigo Condones';
+        $resu['descriptionCopy'] = 'los lugares para retirar condones gratis';
 
-            $resu['newServiceTitle'] = ' Condones ';
-            $resu['newServiceTitleSingle'] = ' Condones ';
+        $resu['titleCopySingle'] = 'lugar que distribuye Condones de forma gratuita.';
+        $resu['titleCopyMultiple'] = 'lugares que distribuyen Condones de forma gratuita.';
 
-            $resu['preCopyFound'] = ' lugares de entrega gratuita de ';
-            $resu['preCopyFoundSingle'] = ' lugar de entrega gratuita de ';
+        $resu['newServiceTitle'] = ' Condones ';
+        $resu['newServiceTitleSingle'] = ' Condones ';
 
-            $resu['titleCopyNotFound'] = 'No tenemos registrados lugares de entrega gratuita de  ';
-        }
+        $resu['preCopyFound'] = ' lugares de entrega gratuita de ';
+        $resu['preCopyFoundSingle'] = ' lugar de entrega gratuita de ';
 
-
-        if ($service == "prueba") {
-            $resu['title'] = 'Prueba VIH';
-            $resu['icon'] = 'iconos-new_analisis-3.png';
-            $resu['titleCopySeo'] = 'puedo hacer Prueba VIH';
-            $resu['descriptionCopy'] = 'los lugares que realizan la prueba de VIH de manera gratuita';
-
-            $resu['titleCopySingle'] = 'lugar para hacer Prueba VIH.';
-            $resu['titleCopyMultiple'] = 'lugares que hagan Prueba VIH.';
-
-            $resu['newServiceTitle'] = ' Centros de Testeo de VIH ';
-            $resu['newServiceTitleSingle'] = ' Centro de Testeo de VIH ';
-
-            $resu['preCopyFound'] = '';
-            $resu['preCopyFoundSingle'] = '';
-
-            $resu['titleCopyNotFound'] = 'No tenemos registrados  ';
-        }
-
-        if ($service == "infectologia") {
-            $resu['title'] = 'Centros de Infectología';
-            $resu['icon'] = 'iconos-new_atencion-3.png';
-            $resu['titleCopySeo'] = 'hay Centros de Infectología';
-            $resu['descriptionCopy'] = 'dónde hay Centros de Infectología';
-
-            $resu['titleCopySingle'] = ' Centro de Infectología.';
-            $resu['titleCopyMultiple'] = 'Centros de Infectología.';
-
-            $resu['newServiceTitle'] = ' Centros de Infectología ';
-            $resu['newServiceTitleSingle'] = ' Centro de Infectología ';
-
-            $resu['preCopyFound'] = '';
-            $resu['preCopyFoundSingle'] = '';
-
-            $resu['titleCopyNotFound'] = "No tenemos registrados " ;
-        }
-
-        if ($service == "vacunatorio") {
-            $resu['title'] = 'Vacunatorios';
-            $resu['icon'] = 'iconos-new_vacunacion-3.png';
-            $resu['titleCopySeo'] = 'hay vacunatorios';
-
-            $resu['titleCopySingle'] = 'Vacunatorio.';
-            $resu['descriptionCopy'] = 'los vacunatorios más cercanos, sus horarios de atención e información de contacto';
-            $resu['titleCopyMultiple'] = 'Vacunatorios.';
-
-            $resu['newServiceTitle'] = ' Vacunatorios ';
-            $resu['newServiceTitleSingle'] = ' Vacunatorio ';
-
-            $resu['preCopyFound'] = '';
-            $resu['preCopyFoundSingle'] = '';
-
-            $resu['titleCopyNotFound'] = 'No tenemos registrados ';
-        }
+        $resu['titleCopyNotFound'] = 'No tenemos registrados lugares de entrega gratuita de  ';
+      }
 
 
-        if ($service == "mac") {
-            $resu['title'] = 'Servicios de Salud Sexual y Reproductiva';
-            $resu['icon'] = 'iconos-new_sssr-3.png';
-            $resu['titleCopySeo'] = 'obtengo métodos anticonceptivos';
-            $resu['descriptionCopy'] = 'dónde obtener métodos anticonceptivos';
+      if ($service == "prueba") {
+        $resu['title'] = 'Prueba VIH';
+        $resu['icon'] = 'iconos-new_analisis-3.png';
+        $resu['titleCopySeo'] = 'puedo hacer Prueba VIH';
+        $resu['descriptionCopy'] = 'los lugares que realizan la prueba de VIH de manera gratuita';
 
-            $resu['titleCopySingle'] = 'lugar para obtener información y métodos anticonceptivos.';
-            $resu['titleCopyMultiple'] = 'lugares para obtener información y métodos anticonceptivos.';
+        $resu['titleCopySingle'] = 'lugar para hacer Prueba VIH.';
+        $resu['titleCopyMultiple'] = 'lugares que hagan Prueba VIH.';
 
-            $resu['newServiceTitle'] = ' métodos anticonceptivos ';
-            $resu['newServiceTitleSingle'] = ' métodos anticonceptivos ';
+        $resu['newServiceTitle'] = ' Centros de Testeo de VIH ';
+        $resu['newServiceTitleSingle'] = ' Centro de Testeo de VIH ';
 
-            $resu['preCopyFound'] = ' lugares de entrega gratuita de ';
-            $resu['preCopyFoundSingle'] = ' lugar de entrega gratuita de ';
+        $resu['preCopyFound'] = '';
+        $resu['preCopyFoundSingle'] = '';
 
-            $resu['titleCopyNotFound'] = 'No tenemos registrados lugares de entrega gratuita de ';
-        }
+        $resu['titleCopyNotFound'] = 'No tenemos registrados  ';
+      }
 
-        if ($service == "ile") {
-            $resu['title'] = 'Interrupción Legal del Embarazo';
-            $resu['icon'] = 'iconos-new_ile-3.png';
-            $resu['titleCopySeo'] = 'puedo obtener información sobre Interrupción Legal del Embarazo';
+      if ($service == "infectologia") {
+        $resu['title'] = 'Centros de Infectología';
+        $resu['icon'] = 'iconos-new_atencion-3.png';
+        $resu['titleCopySeo'] = 'hay Centros de Infectología';
+        $resu['descriptionCopy'] = 'dónde hay Centros de Infectología';
 
-            $resu['titleCopySingle'] = 'lugar para obtener información sobre Interrupción Legal del Embarazo.';
-            $resu['descriptionCopy'] = 'dónde obtener información sobre Interrupción Legal del Embarazo';
-            $resu['titleCopyMultiple'] = 'lugares para obtener información sobre Interrupción Legal del Embarazo.';
+        $resu['titleCopySingle'] = ' Centro de Infectología.';
+        $resu['titleCopyMultiple'] = 'Centros de Infectología.';
 
-            $resu['newServiceTitle'] = ' Interrupción Legal del Embarazo';
-            $resu['newServiceTitleSingle'] = ' Interrupción Legal del Embarazo';
+        $resu['newServiceTitle'] = ' Centros de Infectología ';
+        $resu['newServiceTitleSingle'] = ' Centro de Infectología ';
 
-            $resu['preCopyFound'] = ' lugares para obtener información sobre';
-            $resu['preCopyFoundSingle'] = ' lugar para obtener información sobre ';
+        $resu['preCopyFound'] = '';
+        $resu['preCopyFoundSingle'] = '';
 
-            $resu['titleCopyNotFound'] = 'No tenemos registrados lugares para obtener información sobre ';
-        }
+        $resu['titleCopyNotFound'] = "No tenemos registrados " ;
+      }
 
-        if ($service == "ssr") {
-            $resu['title'] = 'Interrupción Legal del Embarazo';
-            $resu['icon'] = 'iconos-new_ile-3.png';
-            $resu['titleCopySeo'] = 'puedo obtener información sobre Interrupción Legal del Embarazo';
+      if ($service == "vacunatorio") {
+        $resu['title'] = 'Vacunatorios';
+        $resu['icon'] = 'iconos-new_vacunacion-3.png';
+        $resu['titleCopySeo'] = 'hay vacunatorios';
 
-            $resu['titleCopySingle'] = 'lugar para obtener información sobre Interrupción Legal del Embarazo.';
-            $resu['descriptionCopy'] = 'dónde obtener información sobre Interrupción Legal del Embarazo';
-            $resu['titleCopyMultiple'] = 'lugares para obtener información sobre Interrupción Legal del Embarazo.';
+        $resu['titleCopySingle'] = 'Vacunatorio.';
+        $resu['descriptionCopy'] = 'los vacunatorios más cercanos, sus horarios de atención e información de contacto';
+        $resu['titleCopyMultiple'] = 'Vacunatorios.';
 
-            $resu['newServiceTitle'] = ' Interrupción Legal del Embarazo';
-            $resu['newServiceTitleSingle'] = ' Interrupción Legal del Embarazo';
+        $resu['newServiceTitle'] = ' Vacunatorios ';
+        $resu['newServiceTitleSingle'] = ' Vacunatorio ';
 
-            $resu['preCopyFound'] = ' lugares para obtener información sobre';
-            $resu['preCopyFoundSingle'] = ' lugar para obtener información sobre ';
+        $resu['preCopyFound'] = '';
+        $resu['preCopyFoundSingle'] = '';
 
-            $resu['titleCopyNotFound'] = 'No tenemos registrados lugares para obtener información sobre ';
-        }
-
-        if ($service == "dc") {
-            $resu['title'] = 'Interrupción Legal del Embarazo';
-            $resu['icon'] = 'iconos-new_ile-3.png';
-            $resu['titleCopySeo'] = 'puedo obtener información sobre Interrupción Legal del Embarazo';
-
-            $resu['titleCopySingle'] = 'lugar para obtener información sobre Interrupción Legal del Embarazo.';
-            $resu['descriptionCopy'] = 'dónde obtener información sobre Interrupción Legal del Embarazo';
-            $resu['titleCopyMultiple'] = 'lugares para obtener información sobre Interrupción Legal del Embarazo.';
-
-            $resu['newServiceTitle'] = ' Interrupción Legal del Embarazo';
-            $resu['newServiceTitleSingle'] = ' Interrupción Legal del Embarazo';
-
-            $resu['preCopyFound'] = ' lugares para obtener información sobre';
-            $resu['preCopyFoundSingle'] = ' lugar para obtener información sobre ';
-
-            $resu['titleCopyNotFound'] = 'No tenemos registrados lugares para obtener información sobre ';
-        }
+        $resu['titleCopyNotFound'] = 'No tenemos registrados ';
+      }
 
 
+      if ($service == "mac") {
+        $resu['title'] = 'Servicios de Salud Sexual y Reproductiva';
+        $resu['icon'] = 'iconos-new_sssr-3.png';
+        $resu['titleCopySeo'] = 'obtengo métodos anticonceptivos';
+        $resu['descriptionCopy'] = 'dónde obtener métodos anticonceptivos';
 
-        $horario='';
-        $responsable='';
-        $telefono='';
+        $resu['titleCopySingle'] = 'lugar para obtener información y métodos anticonceptivos.';
+        $resu['titleCopyMultiple'] = 'lugares para obtener información y métodos anticonceptivos.';
 
-        foreach ($places as $p) {
-            switch ($p) {
+        $resu['newServiceTitle'] = ' métodos anticonceptivos ';
+        $resu['newServiceTitleSingle'] = ' métodos anticonceptivos ';
+
+        $resu['preCopyFound'] = ' lugares de entrega gratuita de ';
+        $resu['preCopyFoundSingle'] = ' lugar de entrega gratuita de ';
+
+        $resu['titleCopyNotFound'] = 'No tenemos registrados lugares de entrega gratuita de ';
+      }
+
+      if ($service == "ile") {
+        $resu['title'] = 'Interrupción Legal del Embarazo';
+        $resu['icon'] = 'iconos-new_ile-3.png';
+        $resu['titleCopySeo'] = 'puedo obtener información sobre Interrupción Legal del Embarazo';
+
+        $resu['titleCopySingle'] = 'lugar para obtener información sobre Interrupción Legal del Embarazo.';
+        $resu['descriptionCopy'] = 'dónde obtener información sobre Interrupción Legal del Embarazo';
+        $resu['titleCopyMultiple'] = 'lugares para obtener información sobre Interrupción Legal del Embarazo.';
+
+        $resu['newServiceTitle'] = ' Interrupción Legal del Embarazo';
+        $resu['newServiceTitleSingle'] = ' Interrupción Legal del Embarazo';
+
+        $resu['preCopyFound'] = ' lugares para obtener información sobre';
+        $resu['preCopyFoundSingle'] = ' lugar para obtener información sobre ';
+
+        $resu['titleCopyNotFound'] = 'No tenemos registrados lugares para obtener información sobre ';
+      }
+
+      if ($service == "ssr") {
+        $resu['title'] = 'Interrupción Legal del Embarazo';
+        $resu['icon'] = 'iconos-new_ile-3.png';
+        $resu['titleCopySeo'] = 'puedo obtener información sobre Interrupción Legal del Embarazo';
+
+        $resu['titleCopySingle'] = 'lugar para obtener información sobre Interrupción Legal del Embarazo.';
+        $resu['descriptionCopy'] = 'dónde obtener información sobre Interrupción Legal del Embarazo';
+        $resu['titleCopyMultiple'] = 'lugares para obtener información sobre Interrupción Legal del Embarazo.';
+
+        $resu['newServiceTitle'] = ' Interrupción Legal del Embarazo';
+        $resu['newServiceTitleSingle'] = ' Interrupción Legal del Embarazo';
+
+        $resu['preCopyFound'] = ' lugares para obtener información sobre';
+        $resu['preCopyFoundSingle'] = ' lugar para obtener información sobre ';
+
+        $resu['titleCopyNotFound'] = 'No tenemos registrados lugares para obtener información sobre ';
+      }
+
+      if ($service == "dc") {
+        $resu['title'] = 'Interrupción Legal del Embarazo';
+        $resu['icon'] = 'iconos-new_ile-3.png';
+        $resu['titleCopySeo'] = 'puedo obtener información sobre Interrupción Legal del Embarazo';
+
+        $resu['titleCopySingle'] = 'lugar para obtener información sobre Interrupción Legal del Embarazo.';
+        $resu['descriptionCopy'] = 'dónde obtener información sobre Interrupción Legal del Embarazo';
+        $resu['titleCopyMultiple'] = 'lugares para obtener información sobre Interrupción Legal del Embarazo.';
+
+        $resu['newServiceTitle'] = ' Interrupción Legal del Embarazo';
+        $resu['newServiceTitleSingle'] = ' Interrupción Legal del Embarazo';
+
+        $resu['preCopyFound'] = ' lugares para obtener información sobre';
+        $resu['preCopyFoundSingle'] = ' lugar para obtener información sobre ';
+
+        $resu['titleCopyNotFound'] = 'No tenemos registrados lugares para obtener información sobre ';
+      }
+
+
+
+      $horario='';
+      $responsable='';
+      $telefono='';
+
+      foreach ($places as $p) {
+        switch ($p) {
           case ($service == "condones"):
-            $p->horario = $p->horario_distrib;
-            $p->responsable = $p->responsable_distrib;
-            $p->telefono = $p->tel_distrib;
-            break;
+          $p->horario = $p->horario_distrib;
+          $p->responsable = $p->responsable_distrib;
+          $p->telefono = $p->tel_distrib;
+          break;
 
           case ($service == "prueba"):
-            $p->horario = $p->horario_testeo;
-            $p->responsable = $p->responsable_testeo;
-            $p->telefono = $p->tel_testeo;
-            break;
+          $p->horario = $p->horario_testeo;
+          $p->responsable = $p->responsable_testeo;
+          $p->telefono = $p->tel_testeo;
+          break;
 
           case ($service == "vacunatorio"):
-            $p->horario = $p->horario_vac;
-            $p->responsable = $p->responsable_vac;
-            $p->telefono = $p->tel_vac;
-            break;
+          $p->horario = $p->horario_vac;
+          $p->responsable = $p->responsable_vac;
+          $p->telefono = $p->tel_vac;
+          break;
 
           case ($service == "infectologia"):
-            $p->horario = $p->horario_infectologia;
-            $p->responsable = $p->responsable_infectologia;
-            $p->telefono = $p->tel_infectologia;
-            break;
+          $p->horario = $p->horario_infectologia;
+          $p->responsable = $p->responsable_infectologia;
+          $p->telefono = $p->tel_infectologia;
+          break;
 
           case ($service == "mac"):
-            $p->horario = $p->horario_mac;
-            $p->responsable = $p->responsable_mac;
-            $p->telefono = $p->tel_mac;
-            break;
+          $p->horario = $p->horario_mac;
+          $p->responsable = $p->responsable_mac;
+          $p->telefono = $p->tel_mac;
+          break;
 
           case ($service == "ile"):
-            $p->horario = $p->horario_ile;
-            $p->responsable = $p->responsable_ile;
-            $p->telefono = $p->tel_ile;
-            break;
+          $p->horario = $p->horario_ile;
+          $p->responsable = $p->responsable_ile;
+          $p->telefono = $p->tel_ile;
+          break;
 
-            case ($service == "dc"):
-              $p->horario = $p->horario_dc;
-              $p->responsable = $p->responsable_dc;
-              $p->telefono = $p->tel_dc;
-              break;
+          case ($service == "dc"):
+          $p->horario = $p->horario_dc;
+          $p->responsable = $p->responsable_dc;
+          $p->telefono = $p->tel_dc;
+          break;
 
-            case ($service == "ssr"):
-              $p->horario = $p->horario_ssr;
-              $p->responsable = $p->responsable_ssr;
-              $p->telefono = $p->tel_ssr;
-              break;
-      }
-            if (($p->horario == "" || $p->horario == " ")) {
-                $p->horario = " - ";
-            }
-            if (($p->responsable == "" || $p->responsable == " ")) {
-                $p->responsable = " - ";
-            }
-            if (($p->telefono == "" || $p->telefono == " ")) {
-                $p->telefono = " - ";
-            }
+          case ($service == "ssr"):
+          $p->horario = $p->horario_ssr;
+          $p->responsable = $p->responsable_ssr;
+          $p->telefono = $p->tel_ssr;
+          break;
         }
-        $cantidad = count($places);
+        if (($p->horario == "" || $p->horario == " ")) {
+          $p->horario = " - ";
+        }
+        if (($p->responsable == "" || $p->responsable == " ")) {
+          $p->responsable = " - ";
+        }
+        if (($p->telefono == "" || $p->telefono == " ")) {
+          $p->telefono = " - ";
+        }
+      }
+      $cantidad = count($places);
 
-        return json_encode(array('lugares' => $places, 'cantidad' => $cantidad, 'textos' => $resu));
+      return json_encode(array('lugares' => $places, 'cantidad' => $cantidad, 'textos' => $resu));
 
        // return view('seo.placesList', compact('places', 'cantidad', 'pais', 'provincia', 'partido','ciudad', 'resu'));
     }

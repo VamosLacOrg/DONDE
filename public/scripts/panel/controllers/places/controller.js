@@ -215,7 +215,7 @@ dondev2App.config(function($interpolateProvider, $locationProvider) {
   }
 
   function isValidAttr(attr){
-    return !(typeof attr === "undefined" || attr === null);
+    return !(typeof attr === "undefined" || attr === null || 0 === attr.length);
   }
 
   function isValidForm() {

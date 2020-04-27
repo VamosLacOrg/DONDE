@@ -1,9 +1,9 @@
 dondev2App.controller('mapController',
-	function(placesFactory,NgMap, $scope,$rootScope, $timeout, $routeParams, $location, $http){
+  function(placesFactory,NgMap, $scope,$rootScope, $timeout, $routeParams, $location, $http){
 
     //Constants
     var overviewZoom = 5;
-    var placeZoom = 15;
+    var placeZoom = 16;
     var initLocation = {latitude: -27.433133, longitude: -63.046042};
 
     //Private variables
@@ -15,6 +15,7 @@ dondev2App.controller('mapController',
 
     // Init map when ready
     function initMap() {
+      $rootScope.centerMarkers = [];
       $rootScope.moveMapTo = initLocation;
       changeZoom("overview");
       $scope.bounds = new google.maps.LatLngBounds();
@@ -52,16 +53,16 @@ dondev2App.controller('mapController',
 
     //Watch places. If changed, reset markers. Prefilter centers to avoid doubled markers on same geolocation
     $rootScope.$watch('places', function(){
-      var places = $rootScope.places;
+      var places = clone($rootScope.places);
       var centers = $rootScope.centerMarkers;
-      if(places){
+      if(places && places.length !== 0){
         deleteMarkers();
         places = filterPlacesOverCenters(places,centers);
         for (var i = 0; i < places.length; i++) {
           var item = places[i];
           pushMarkerPlace(item);
         }
-        if(centers){
+        if(centers && centers.length !== 0){
           for (var i = 0; i < centers.length; i++) {
             var item = centers[i];
             pushMarkerCenter(item);
@@ -75,7 +76,7 @@ dondev2App.controller('mapController',
     // Watch out changes on currentMarker. Must delete a present place marker before
     $rootScope.$watch('currentMarker', function(item){
       var centers = $rootScope.centerMarkers;
-      if(centers){
+      if(centers && centers.length !== 0){
         for (var i = 0; i < centers.length; i++) {
           var item = centers[i];
           deleteMarkerByID(item.placeId);
@@ -88,6 +89,15 @@ dondev2App.controller('mapController',
         changeZoom("place");
       }
     });
+
+    function clone(obj){
+      if (null == obj || "object" != typeof obj) return obj;
+      var copy = obj.constructor();
+      for (var attr in obj) {
+        if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+      }
+      return copy;
+    }
 
     // Delete marker by ID
     function deleteMarkerByID(id){
@@ -103,7 +113,7 @@ dondev2App.controller('mapController',
 
     // Get rid of centers that are present on places, avoiding double markers
     function filterPlacesOverCenters(places, centers){
-      if(centers){
+      if(centers && centers.length !== 0){
         for (var j = 0; j < centers.length; j++) {
           for (var i = 0; i < places.length; i++) {
             if(centers[j].placeId == places[i].placeId){

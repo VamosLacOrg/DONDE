@@ -54,7 +54,10 @@ Route::resource('votar', '\App\Http\Controllers\EvaluationRESTController');
 Route::get('api/v1/panel/places/{id}', '\App\Http\Controllers\PlacesRESTController@showPanel');
 Route::get('api/v1/places2/{id}', '\App\Http\Controllers\PlacesRESTController@showPanel');
 
-
+Route::get('api/v1/panel/clear/ciudad/clearAllEmtpy', '\App\Http\Controllers\CiudadRESTController@clearCiudadesNoCenters');
+Route::get('api/v1/panel/clear/provincia/clearAllEmtpy', '\App\Http\Controllers\CiudadRESTController@clearProvinciaNoCenters');
+Route::get('api/v1/panel/clear/pais/clearAllEmtpy', '\App\Http\Controllers\CiudadRESTController@clearPaisNoCenters');
+Route::get('api/v1/panel/clear/partido/clearAllEmtpy', '\App\Http\Controllers\CiudadRESTController@clearPartidoNoCenters');
 
 /*
 |--------------------------------------------------------------------------
@@ -247,6 +250,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('api/v1/panel/partido/update/{id}', '\App\Http\Controllers\PartidoRESTController@updateHabilitado');
 
     Route::get('api/v1/panel/ciudad/panel', '\App\Http\Controllers\CiudadRESTController@showCities');
+    Route::get('api/v1/panel/ciudad/panel/{per_page}/', '\App\Http\Controllers\CiudadRESTController@showCitiespp');
+    Route::get('api/v1/panel/ciudad/panel/{per_page}/{q}', '\App\Http\Controllers\CiudadRESTController@showCitiespp');
     Route::post('api/v1/panel/ciudad/update/{id}', '\App\Http\Controllers\CiudadRESTController@updateHabilitado');
 
     Route::post('api/v1/panel/places/{id}/update', '\App\Http\Controllers\PlacesRESTController@update');

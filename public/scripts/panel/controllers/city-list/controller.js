@@ -17,9 +17,17 @@ dondev2App.config(function ($interpolateProvider, $locationProvider) {
     $http.get('../api/v1/panel/clear/ciudad/clearAllEmtpy')
     .success(function (response) {
       $scope.loadingCiudades = false;
-      var text = "No se han encontrado ciudades habilitadas sin centros.";
       if (parseInt(response) > 0) {
-        text = "Se han removido " + response + " ciudades que no tenian centros."; ''
+        if($rootScope.selectedLanguage == "en")
+          text = response + " cities have been removed that don't have any centers.";
+        else
+          text = "Se han removido " + response + " ciudades que no tenian centros.";
+      }
+      else{
+        if($rootScope.selectedLanguage == "en")
+          text = "No cities have been found with no centers.";
+        else
+          text = "No se han encontrado ciudades habilitadas sin centros.";
       }
       Materialize.toast(text, 5000);
       $scope.loadPage();
@@ -36,13 +44,21 @@ dondev2App.config(function ($interpolateProvider, $locationProvider) {
     $http.get('../api/v1/panel/clear/partido/clearAllEmtpy')
     .success(function (response) {
       $scope.loadingPartido = false;
-      var text = "No se han encontrado partidos habilitados sin centros.";
       for (let index = 0; index < response[1].length; index++) {
         var cadena = "#filled-in-box-" + response[1][index];
         $(cadena).prop('checked', false);
       }
-      if (parseInt(response[0]) > 0) {
-        text = "Se han removido " + response[0] + " partidos que no tenian centros."; ''
+      if (parseInt(response) > 0) {
+        if($rootScope.selectedLanguage == "en")
+          text = response + " districts have been removed that don't have any centers.";
+        else
+          text = "Se han removido " + response[0] + " partidos que no tenian centros.";
+      }
+      else{
+        if($rootScope.selectedLanguage == "en")
+          text = "No districts have been found with no centers.";
+        else
+          text = "No se han encontrado partidos habilitadas sin centros.";
       }
       Materialize.toast(text, 5000);
       $scope.loadPage();
@@ -51,29 +67,42 @@ dondev2App.config(function ($interpolateProvider, $locationProvider) {
   }
 
   $scope.clearPais = function () {
-
     $scope.loadingPaises = true;
     $http.get('../api/v1/panel/clear/pais/clearAllEmtpy')
     .success(function (response) {
       $scope.loadingPaises = false;
-      var text = "No se han encontrado paises habilitados sin centros.";
       if (parseInt(response) > 0) {
-        text = "Se han removido " + response + " paises que no tenian centros."; ''
+        if($rootScope.selectedLanguage == "en")
+          text = response + " countries have been removed that don't have any centers.";
+        else
+          text = "Se han removido " + response + " paises que no tenian centros."
+      }
+      else{
+        if($rootScope.selectedLanguage == "en")
+          text = "No countries have been found with no centers.";
+        else
+          text = "No se han encontrado paises habilitados sin centros.";
       }
       Materialize.toast(text, 5000);
       $scope.loadPage();
-
     });
   }
   $scope.clearProvincias = function () {
     $scope.loadingProvincias = true;
     $http.get('../api/v1/panel/clear/provincia/clearAllEmtpy')
     .success(function (response) {
-
       $scope.loadingProvincias = false;
-      var text = "No se han encontrado provincias habilitadas sin centros.";
       if (parseInt(response) > 0) {
-        text = "Se han removido " + response + " provincias que no tenian centros."; ''
+        if($rootScope.selectedLanguage == "en")
+          text = response + " states have been removed that don't have any centers.";
+        else
+          text = "Se han removido " + response + " provincias que no tenian centros.";
+      }
+      else{
+        if($rootScope.selectedLanguage == "en")
+          text = "No states have been found with no centers.";
+        else
+          text = "No se han encontrado provincias habilitadas sin centros.";
       }
       Materialize.toast(text, 5000);
       $scope.loadPage();
@@ -132,10 +161,18 @@ dondev2App.config(function ($interpolateProvider, $locationProvider) {
     $scope.loadingPrev = true;
     $http.post('../api/v1/panel/ciudad/update/' + id, httpdata)
     .success(function (response) {
-
-      var text = "Se ha habilitado " + name + " correctamente. Desde ahora es seleccionable en los combos.";
-      if (!httpdata.habilitado) {
-        var text = "Se ha ocultado " + name + " correctamente. Desde ahora no es seleccionable en los combos.";
+      var text;
+      if(!httpdata.habilitado) {
+        if($rootScope.selectedLanguage == "en")
+          text = name + " have been disabled. From now it is not selectable in combos.";
+        else
+          text = "Se ha ocultado " + name + " correctamente. Desde ahora no es seleccionable en los combos.";
+      }
+      else{
+        if($rootScope.selectedLanguage == "en")
+          text = name + " have been enabled. From now it is selectable in combos.";
+        else
+          text = "Se ha habilitado " + name + " correctamente. Desde ahora es seleccionable en los combos.";
       }
       Materialize.toast(text, 5000);
       $scope.loadingPrev = false;
